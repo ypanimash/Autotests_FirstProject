@@ -1,5 +1,6 @@
 ﻿using Autotests_FirstProject.Main;
 using Autotests_FirstProject.Main.Constants;
+using Autotests_FirstProject.Main.ProjectObject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,24 +11,21 @@ namespace Autotests_FirstProject.Tests.LoginTests
 {
     public class Login : Config
     {
-
+        private readonly TimeMethods timeMethods = new TimeMethods();
+        private readonly LoginPO _getLoginPO = new();
 
         [Test]
         public void SuccessfullyLogin()
         {
-           // LoggerConst.TestName = "SuccessfullyLogin";
+            LoginMainPage();
 
-           // LoginMainPage();
-            
+            Thread.Sleep(500);
+            timeMethods.ExplicitWait(_getLoginPO.GetDDLUserNav());
 
-            driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(TimeConst.IMPLICIT_WAIT);
-
-            //ActDisplayDropDownList = GetDisplayData(_getLoginPageP.GetDropDownList());
-            //ActDisplayMenuServices = GetDisplayData(_getLoginPageP.GetMenuServices());
-            //ActDisplayMenuMain = GetDisplayData(_getLoginPageP.GetMenuMain());
-
-            //_getLoginPageP.AssertSuccessfullyLogin();
+            Assert.IsTrue(driver.FindElement(_getLoginPO.GetDDLUserNav()).Enabled);
         }
+
+
 
     }
 }

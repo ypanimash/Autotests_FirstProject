@@ -1,4 +1,6 @@
 ﻿using Autotests_FirstProject.Main.Constants;
+using Autotests_FirstProject.Main.Enum;
+using Autotests_FirstProject.Main.ProjectObject;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
@@ -14,6 +16,8 @@ namespace Autotests_FirstProject.Main
     public class Config
     {
         private static IWebDriver _driver;
+        private static TimeMethods timeMethods = new();
+        private static LoginPO _getLoginPO = new();
 
         protected static IWebDriver driver
         {
@@ -27,7 +31,7 @@ namespace Autotests_FirstProject.Main
             }
             private set { _driver = value; }
         }
-        public static void ChooseBrowser(EnumBrowserType.BrowserType browserType = EnumBrowserType.BrowserType.Chrome, int timeout = 15)
+        public static void ChooseBrowser(EnumBrowserType.BrowserType browserType = EnumBrowserType.BrowserType.Chrome)
         {
             switch (browserType)
             {
@@ -49,9 +53,9 @@ namespace Autotests_FirstProject.Main
         public void OpenBrowser_MainPage()
         {
             _driver = null;
-            driver.Navigate().GoToUrl("https://prom.ua/ua/");
+            driver.Navigate().GoToUrl("https://telemart.ua/");
             driver.Manage().Window.Maximize();
-            driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(TimeConst.IMPLICIT_WAIT);
+            //driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(TimeConst.IMPLICIT_WAIT);
         }
 
         [TearDown]
@@ -61,19 +65,44 @@ namespace Autotests_FirstProject.Main
             driver.Quit();
         }
 
+        public static void SelectLanguage(EnumLanguageType.LanguageType languageType  = EnumLanguageType.LanguageType.UA)
+        {
+            switch (languageType)
+            {
+                case EnumLanguageType.LanguageType.UA:
+                    timeMethods.ExplicitWait(_getLoginPO.GetBtnUaLang());
+                    var resultUa = driver.FindElement(_getLoginPO.GetBtnUaLang());
+                    resultUa.Click();  
+                    break;
+                case EnumLanguageType.LanguageType.RU:
+                    timeMethods.ExplicitWait(_getLoginPO.GetBtnRuLang());
+                    var resultRu = driver.FindElement(_getLoginPO.GetBtnRuLang());
+                    resultRu.Click();
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(languageType), languageType, null);
+            }
+        }
 
         #region Base interface interaction methods
+        public void LoginMainPage()
+        {
+            SelectLanguage();
+            driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(TimeConst.IMPLICIT_WAIT);
 
-        //public void LoginMainPage()
-        //{
-        //    var loginField = driver.FindElement(_getLoginPageP.GetLoginField());
-        //    SendKeyAndClearElement(loginField, LoginConst.UserLogin);
+            driver.FindElement(_getLoginPO.GetBntLoginToAcc()).Click();
 
-        //    var passwordField = driver.FindElement(_getLoginPageP.GetPassField());
-        //    SendKeyAndClearElement(passwordField, LoginConst.UserPass);
+            timeMethods.ExplicitWait(_getLoginPO.GetFldEnterEMail());
+            var emailField = driver.FindElement(_getLoginPO.GetFldEnterEMail());
+            SendKeyAndClearElement(emailField, LoginConst.UserLogin);
 
-        //    ClickElement(_getLoginPageP.GetLoginButtonOK());
-        //}
+            var passwordField = driver.FindElement(_getLoginPO.GetFldPass());
+            SendKeyAndClearElement(passwordField, LoginConst.UserPass);
+
+            ClickElement(_getLoginPO.GetSubmitLogin());
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(TimeConst.IMPLICIT_WAIT);
+        }
 
         public void ClickElement(By element)
         {
