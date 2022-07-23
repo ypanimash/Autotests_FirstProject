@@ -13,7 +13,7 @@ namespace Autotests_FirstProject.Main
     {
         public void ExplicitWait(By elementPath)
         {
-            var wait = new WebDriverWait(driver, new TimeSpan(0, 0, 05));
+            var wait = new WebDriverWait(driver, new TimeSpan(0, 0, 15));
             wait.Until(condition =>
             {
                 try
@@ -26,6 +26,10 @@ namespace Autotests_FirstProject.Main
                     return false;
                 }
                 catch (NoSuchElementException)
+                {
+                    return false;
+                }
+                catch (Exception)
                 {
                     return false;
                 }

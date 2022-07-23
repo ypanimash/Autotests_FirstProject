@@ -5,11 +5,6 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Autotests_FirstProject.Main
 {
@@ -55,7 +50,8 @@ namespace Autotests_FirstProject.Main
             _driver = null;
             driver.Navigate().GoToUrl("https://telemart.ua/");
             driver.Manage().Window.Maximize();
-            //driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(TimeConst.IMPLICIT_WAIT);
+            SelectLanguage();
+            driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(TimeConst.IMPLICIT_WAIT);
         }
 
         [TearDown]
@@ -86,19 +82,16 @@ namespace Autotests_FirstProject.Main
         }
 
         #region Base interface interaction methods
-        public void LoginMainPage()
+        public void LoginMainPage(string elementLogin, string elementPass)
         {
-            SelectLanguage();
-            driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(TimeConst.IMPLICIT_WAIT);
-
             driver.FindElement(_getLoginPO.GetBntLoginToAcc()).Click();
 
             timeMethods.ExplicitWait(_getLoginPO.GetFldEnterEMail());
             var emailField = driver.FindElement(_getLoginPO.GetFldEnterEMail());
-            SendKeyAndClearElement(emailField, LoginConst.UserLogin);
+            SendKeyAndClearElement(emailField, elementLogin);
 
             var passwordField = driver.FindElement(_getLoginPO.GetFldPass());
-            SendKeyAndClearElement(passwordField, LoginConst.UserPass);
+            SendKeyAndClearElement(passwordField, elementPass);
 
             ClickElement(_getLoginPO.GetSubmitLogin());
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(TimeConst.IMPLICIT_WAIT);

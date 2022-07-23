@@ -1,16 +1,11 @@
 ﻿using OpenQA.Selenium;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Autotests_FirstProject.Main.ProjectObject
 {
     public class LoginPO
     {
         //Select Lang
-        private readonly By _btnUaLang = By.XPath("//div[@class='modal-content']//div[@class='modal-body clearfix']//a[@href='https://telemart.ua/ua/?change_language=1']");
+        private readonly By _btnUaLang = By.XPath("//div[@class='modal-content']//div[@class='modal-body clearfix']//a[@href='https://telemart.ua/ua/']");
         public By GetBtnUaLang()
         {
             return _btnUaLang;
@@ -42,7 +37,15 @@ namespace Autotests_FirstProject.Main.ProjectObject
         {
             return _submitLogin;
         }
+        private readonly By _notificationNotValidPassOrLogin = By.XPath("//form[@id='cEnterForm']//div[@class='b-error']//div[@class='b-error-in']");
+        public By GetNotificationNotValidPassOrLogin()
+        {
+            return _notificationNotValidPassOrLogin;
+        }
 
+
+
+        
         //Main Page
         private readonly By _ddlUserNav = By.XPath("//div[@class='b-hts-col-userbox']//a[@id='dropdownUserNav']");
         public By GetDDLUserNav()
